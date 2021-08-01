@@ -37,7 +37,6 @@ def getContours(img, imgContour):
             # Return centroid tuple
             return((avg_x, avg_y));
 
-
 # New CV2 Window named Options, for Threshhold Trackars
 cv2.namedWindow("Options")
 cv2.resizeWindow("Options", 640, 240)
