@@ -8,7 +8,7 @@ webcam = cv2.VideoCapture(0)
 def empty(a):
     pass
 
-def getContours(img, imgContour):
+def getCentroid(img, imgContour):
     # Get contours from dilated image
     contours, hier = cv2.findContours(img, cv2.RETR_TREE, cv2.CHAIN_APPROX_TC89_KCOS)
     
@@ -16,7 +16,7 @@ def getContours(img, imgContour):
     for c in contours:
         # Get area, and if the area of the contour is extremely small, do not draw a contour
         area = cv2.contourArea(c)
-        if area > 500:
+        if area > 1000:
             # Draw for reference
             cv2.drawContours(imgContour, contours, -1, (0, 255, 0), 2)
             # Calculate the perimeter, and approximates the polygon's curves (Douglas-Pecker alg)
@@ -33,6 +33,9 @@ def getContours(img, imgContour):
             imgContour = cv2.line(imgContour, (x, y), (x+w, y+h), color=(0, 0, 255), thickness=1)
             imgContour = cv2.line(imgContour, (x, y+h), (x+w, y), color=(0, 0, 255), thickness=1)
             imgContour = cv2.circle(imgContour, (avg_x, avg_y), radius=3, color=(0, 0, 255), thickness=-1)
+            # Point statistics
+            text = str(avg_x) + ', ' + str(avg_y)
+            imgContour = cv2.putText(imgContour, text,(avg_x+5, avg_y), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0,0,255))
 
             # Return centroid tuple
             return((avg_x, avg_y));
@@ -42,6 +45,9 @@ cv2.namedWindow("Options")
 cv2.resizeWindow("Options", 640, 240)
 cv2.createTrackbar("minVal", "Options", 104, 255, empty)
 cv2.createTrackbar("maxVal", "Options", 207, 255, empty)
+
+# New Window for Dilated Gray layer
+cv2.namedWindow("Preview 2")
 
 while True:
     # Read input from webcam into frame
@@ -64,10 +70,11 @@ while True:
     kernel = np.ones((3,3))
     frameDilation = cv2.dilate(frameCanny, kernel, iterations=1)
     
-    getContours(frameDilation, frame)
+    getCentroid(frameDilation, frame)
 
     # Show the canny frame
     cv2.imshow('Preview',frame)
+    cv2.imshow('Preview 2', frameDilation)
 
     c = cv2.waitKey(2)
     # Exit on 'ESC'
