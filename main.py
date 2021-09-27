@@ -39,7 +39,7 @@ while True:
     kernel = np.ones((3,3))
     frameDilation = cv2.dilate(frameCanny, kernel, iterations=1)
     
-    getCentroid(frameDilation, frame)
+    print(getCentroid(frameDilation, frame))
 
     # Show the canny frame
     cv2.imshow('Preview',frame)

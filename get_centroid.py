@@ -3,7 +3,7 @@ import numpy as np
 
 def getCentroid(img, imgContour):
     # Get contours from dilated image
-    contours, hier = cv2.findContours(img, cv2.RETR_TREE, cv2.CHAIN_APPROX_TC89_KCOS)
+    contours, h = cv2.findContours(img, cv2.RETR_TREE, cv2.CHAIN_APPROX_TC89_KCOS)
     
     # For each contour
     for c in contours:
